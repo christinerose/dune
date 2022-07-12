@@ -37,8 +37,8 @@ the crowd:
    great choice for multi-project development.
 
 -  Cross-platform: as long as your code is portable, Dune will be
-   able to cross-compile it (note that Dune is designed internally
-   to make this easy, but the actual support is not implemented yet)
+   able to cross-compile it. Dune is designed internally
+   to make this easy. Read more in the [Cross-Compilation Doc](https://dune.readthedocs.io/en/stable/cross-compilation.html)
 
 -  Release directly from any revision: Dune needs no setup stage. To
    release your project, simply point to a specific tag. Of course, you can 
@@ -56,15 +56,20 @@ Terminology
    opam builds and installs as one
 
 -  **project**: a source tree, maybe containing one or more
-   packages
+   packages as well as a `dune-project` file. 
+   Each directory in the tree, including the root, 
+   must have a `dune` file specifying how
+   to build the files in its directory.
 
--  **root**: the directory from where Dune can build
+-  **root**: the top-most directory in a project and workspace. 
+   It's the directory from where Dune builds
    things. Dune knows how to build targets that are descendants of
    the root. Anything outside of the tree starting from the root is
    considered part of the **installed world**. How the root is
    determined is explained in :ref:`finding-root`.
 
--  **workspace**: the subtree starting from the root.
+-  **workspace**: the subtree starting from each root, if you have
+   multible workspaces in a single project. 
    It can contain any number of projects that will be built
    simultaneously by Dune.
 
