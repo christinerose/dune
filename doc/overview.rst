@@ -41,9 +41,10 @@ the crowd:
    to make this easy. Read more in the [Cross-Compilation Doc](https://dune.readthedocs.io/en/stable/cross-compilation.html)
 
 -  Release directly from any revision: Dune needs no setup stage. To
-   release your project, simply point to a specific tag. Of course, you can 
+   release your project, simply point to a specific Git tag (named revision. Of course, you can 
    add some release steps if you'd like, but it isn't
-   necessary. 
+   necessary. For more information, please refer to the 
+   [`dune-release` documentation](https://github.com/ocamllabs/dune-release).
 
 The first section below defines some terms used in 
 this manual. The second section specifies the Dune metadata
@@ -53,60 +54,64 @@ Terminology
 ===========
 
 -  **package**: a set of libraries and executables that
-   opam builds and installs as one
+   opam builds and installs as one.
 
--  **project**: a source tree, maybe containing one or more
-   packages as well as a `dune-project` file. 
+-  **project**: a source tree that must include a `dune-project` file.
+   It may also contain one or more packages. 
    Each directory in the tree, including the root, 
    must have a `dune` file specifying how
    to build the files in its directory.
 
--  **root**: the top-most directory in a project and workspace. 
+-  **root**: the top-most directory in a GitHub repo, workspace, and project. 
    It's the directory from where Dune builds
    things. Dune knows how to build targets that are descendants of
    the root. Anything outside of the tree starting from the root is
-   considered part of the **installed world**. How the root is
-   determined is explained in :ref:`finding-root`.
+   considered part of the **installed world**. Refer to :ref:`finding-root`
+   to learn how the workspace root is determined.
 
 -  **workspace**: the subtree starting from each root, if you have
-   multible workspaces in a single project. 
-   It can contain any number of projects that will be built
+   multiple workspaces in a single project. 
+   It can also contain any number of projects that will be built
    simultaneously by Dune.
 
--  **installed world**: anything outside of the workspace, that Dune
-   takes for granted and doesn't know how to build
+-  **installed world**: anything outside of the workspace. Dune 
+   doesn't know how to build things in the installed world.
 
 -  **installation**: the action of copying build artifacts or
    other files from the ``<root>/_build`` directory to the installed
-   world
+   world.
 
--  **scope**: determines where private items are
+-  **scope**: defined by any directory that contains at least one `<package>.opam` 
+   file. Typically, every project defines a single scope that is a 
+   subtree starting from this directory. Moreover, scopes are separate from your project's dependencies. 
+   The scope also determines where private items are
    visible. Private items include libraries or binaries that will not
-   be installed. In Dune, scopes are subtrees rooted where at
-   least one ``<package>.opam`` file is present. Moreover, scopes are
-   exclusive. Typically, every project defines a single scope. See
-   :ref:`scopes` for more details.
+   be installed.  See :ref:`scopes` for more details.
 
--  **build context**: a subdirectory of the
-   ``<root>/_build`` directory. It contains all the build artifacts of
-   the workspace built against a specific configuration. Without
-   specific configuration from the user, there is always a ``default``
-   build context, which corresponds to the environment in which Dune
-   executes. Build contexts can be specified by writing a
-   :ref:`dune-workspace` file.
+-  **build context**: a specific configuration written in 
+   a :ref:`dune-workspace` file, which has a corresponding subdirectory in the
+   ``<root>/_build`` directory. It contains all the workspace's build artifacts. 
+   Without this specific configuration from the user, there is always a ``default``
+   build context that corresponds to the exectued Dune environment. 
 
 -  **build context root**: the root of a build context named ``foo`` is
    ``<root>/_build/<foo>``
 
+-  **build target**: specified on the command line, e.g., `dune build <target_path.exe>`. 
+   All targets that Dune knows how to build live in the `_build` directory.
+
 - **alias**: a build target that doesn't produce any file and has
-  configurable dependencies. Aliases are per-directory. However, on the command
-  line, asking to build an alias in a given directory will trigger the
-  construction of the alias in all children directories recursively. Dune
+  configurable dependencies. Targets starting with `@` on the command 
+  line are interpreted as aliases (e.g., `dune build @src/runtest`). 
+  Aliases are per-directory. However, asking to build an alias 
+  in a given directory will also trigger alias
+  construction in all children directories recursively. 
+  If no target is specified, Dune builds the `default` alias.  Dune
   defines several :ref:`builtin-aliases`.
 
-- **environment**: in Dune, each directory has an environment
-  attached to it. The environment determines the default values of
-  various parameters, such as the compilation flags. Inside a scope,
+- **environment**: determines the default values of
+  various parameters, such as the compilation flags. In Dune, 
+  each directory has an environment attached to it. Inside a scope,
   each directory inherits the environment from its parent. At the root
   of every scope, a default environment is used. At any point, the
   environment can be altered using an :ref:`dune-env` stanza.
