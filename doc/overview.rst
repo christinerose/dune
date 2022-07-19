@@ -53,26 +53,28 @@ format, and the third one describes how to use the ``dune`` command.
 Terminology
 ===========
 
--  **package**: a set of libraries and executables that
-   opam builds and installs as one.
-
--  **project**: a source tree that must include a `dune-project` file.
-   It may also contain one or more packages. 
-   Each directory in the tree, including the root, 
-   must have a `dune` file specifying how
-   to build the files in its directory.
-
--  **root**: the top-most directory in a GitHub repo, workspace, and project. 
-   It's the directory from where Dune builds
-   things. Dune knows how to build targets that are descendants of
+-  **root**: the top-most directory in a GitHub repo, workspace, and project,
+   differentiated by variables such as `%{workspace_root}` and `%{project_root`. 
+   Dune builds things from this directory. It knows 
+   how to build targets that are descendants of
    the root. Anything outside of the tree starting from the root is
    considered part of the **installed world**. Refer to :ref:`finding-root`
    to learn how the workspace root is determined.
 
--  **workspace**: the subtree starting from each root, if you have
-   multiple workspaces in a single project. 
-   It can also contain any number of projects that will be built
-   simultaneously by Dune.
+-  **workspace**: the subtree starting from each root. 
+   It can contain any number of projects that will be built
+   simultaneously by Dune, and it must contain a `dune-workspace` file.
+
+-  **project**: a collection of source files that must 
+   include a `dune-project` file.
+   It may also contain one or more packages. 
+   Each directory in the tree, including the root, 
+   must have a `dune` file specifying how
+   to build the files in its directory. Projects can 
+   be shared between different applications.
+
+-  **package**: a set of libraries and executables that
+   opam builds and installs as one.
 
 -  **installed world**: anything outside of the workspace. Dune 
    doesn't know how to build things in the installed world.
