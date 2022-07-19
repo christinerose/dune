@@ -38,7 +38,7 @@ the crowd:
 
 -  Cross-platform: as long as your code is portable, Dune will be
    able to cross-compile it. Dune is designed internally
-   to make this easy. Read more in the [Cross-Compilation Doc](https://dune.readthedocs.io/en/stable/cross-compilation.html)
+   to make this easy. Read more in the :ref:`cross-compilation`.
 
 -  Release directly from any revision: Dune needs no setup stage. To
    release your project, simply point to a specific Git tag (named revision. Of course, you can 
